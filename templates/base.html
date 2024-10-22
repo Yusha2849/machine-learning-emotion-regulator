@@ -1,35 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}Chromotherapy App{% endblock %}</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
-</head>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='styles.css') }}"
+    />
+  </head>
 
-<body>
+  <body>
     <header>
-        <nav>
-            <ul>
-                <img src="https://th.bing.com/th/id/R.7e935370d5f0afb0a7bb33ede3a15385?rik=s8hH86oVtB8Z7g&pid=ImgRaw&r=0" alt="Logo" class="navbar-logo">
-                <li><a href="{{ url_for('home') }}">HOME</a></li>
-                <li><a href="{{ url_for('emotion_description') }}">COLOUR THERAPY</a></li>
-                <li><a href="{{ url_for('contact') }}">CONTACT US</a></li>
+      <nav>
+        <ul>
+          <img
+            src="https://th.bing.com/th/id/R.7e935370d5f0afb0a7bb33ede3a15385?rik=s8hH86oVtB8Z7g&pid=ImgRaw&r=0"
+            alt="Logo"
+            class="navbar-logo"
+          />
+          <li><a href="{{ url_for('home') }}">HOME</a></li>
+          <li>
+            <a href="{{ url_for('emotion_description') }}">COLOUR THERAPY</a>
+          </li>
+          <li><a href="{{ url_for('contact') }}">CONTACT US</a></li>
+          <li><a href="{{ url_for('results') }}">RESULTS</a></li>
 
-                <!-- Add more links here if needed -->
-            </ul>
-        </nav>
+          <!-- Add more links here if needed -->
+        </ul>
+      </nav>
     </header>
 
-    <main>
-        {% block content %}{% endblock %}
-    </main>
+    <main>{% block content %}{% endblock %}</main>
 
- 
     {% block footer %}
     <footer>
-        <p>&copy; 2024 Dut Honourable Members App</p>
+      <p>&copy; 2024 Dut Honourable Members App</p>
     </footer>
     {% endblock %}
-</body>
+  </body>
 </html>

@@ -1,0 +1,17 @@
+{% extends "base.html" %} {% block title %}Emotion Color Comparison{% endblock
+%} {% block content %}
+<div class="emotion-comparison-container">
+  <h1>COMPARISON OF RESULTS</h1>
+  <div class="container">
+    {% for emotion, graph in emotion_graphs %}
+    <div class="graph-container">
+      <h3>{{ emotion }}</h3>
+      <img
+        src="data:image/png;base64,{{ graph }}"
+        alt="Graph for {{ emotion }}"
+      />
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

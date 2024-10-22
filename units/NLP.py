@@ -27,7 +27,8 @@ class NLP:
     def _ensure_nltk_data():
         resources = [
             ('tokenizers/punkt', 'punkt'),
-            ('corpora/stopwords', 'stopwords')
+            ('corpora/stopwords', 'stopwords'),
+            ('tokenizers/punkt_tab','punkt_tab' )
         ]
 
         for resource_path, resource_name in resources:
@@ -38,6 +39,7 @@ class NLP:
                 print(f"{resource_name} Downloading, park")
                 nltk.download(resource_name, quiet=True)
                 print(f"{resource_name} Kla and setup")
+        
 
     @staticmethod
     def operate(sentence):

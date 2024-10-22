@@ -3,22 +3,39 @@ from flask import Flask, json, jsonify,  render_template, abort, redirect, url_f
 from datetime import date
 from flask_wtf.csrf import CSRFProtect
 from markupsafe import escape
+from flask_mail import Mail, Message
+import os
 
 # Personal imports
 from units.db_populate import populate_emotioncolour,check_database_existence
-from units.forms import UserEmotionDescription
+from units.forms import UserEmotionDescription, ContactForm
 from units.DAO import EmotionColourDAO,RecordDAO
 from units.db_init import init_db
 from units.NLP import NLP
 
+# Result imports
+from flask_socketio import SocketIO
+import matplotlib.pyplot as plt
+from io import BytesIO
+import base64
 
 app = Flask(__name__)
 
+socketio = SocketIO(app)
 
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///project.db"
 
 app.config['SECRET_KEY'] = 'your_secret_key_here'
 
+# Configure Flask-Mail
+app.config["MAIL_SERVER"] = 'smtp.gmail.com'
+app.config["MAIL_PORT"] = 465
+app.config['MAIL_USERNAME'] = os.environ.get('ATTENDANCE_EMAIL')
+app.config['MAIL_PASSWORD'] = os.environ.get('ATTENDANCE_EMAIL_PASS')
+app.config['MAIL_DEFAULT_SENDER'] = os.environ.get('ATTENDANCE_EMAIL')
+app.config['MAIL_USE_TLS'] = False
+app.config['MAIL_USE_SSL'] = True    
+mail = Mail(app) 
 
 # Enable CSRF protection
 csrf = CSRFProtect(app)
@@ -286,21 +303,91 @@ def delete_record(record_id):
 
 @app.route('/contact', methods=['GET', 'POST'])
 def contact():
+    form = ContactForm()
     if request.method == 'POST':
-        # Get form data
-        name = request.form.get('name')
-        email = request.form.get('email')
-        message = request.form.get('message')
+        # Validate the form using the `validate_on_submit` method
+        if form.validate_on_submit():
+            name = form.name.data
+            email = form.email.data
+            message = form.message.data
 
-        # Form validation (you can customize this further)
-        if not name or not email or not message:
-            flash("Please fill out all fields.", "error")
-        else:
+            # Send email
+            msg = Message(subject=f'New Contact Form Submission from {name}',
+                          sender=os.environ.get('ATTENDANCE_EMAIL'),
+                          recipients=[email, 'digitalattendance05@gmail.com'],  # Replace with your recipient email
+                          body=f'Name: {name}\nEmail: {email}\nMessage: {message}')
+            mail.send(msg)
+            
             # Handle form submission (e.g., send email or store in database)
             flash("Thank you for contacting us!", "success")
             return redirect('/contact')  # Redirect to prevent form re-submission
+        else:
+            flash("Please fill out all fields correctly.", "error")
 
-    return render_template('contact.html')
+    return render_template('contact.html', form=form)  # Pass the form to the template
+
+# Define emotions with their color values
+emotions = {
+    "Anger": {"black": 4.5, "red": 8.6, "gray": 1.0, "yellow": 0, "light_purple": 0, "sky_blue": 0, "jade": 0, "green": 0, "aqua": 0, "indigo": 0.5, "blue": 0, "bright_pink": 0, "chocolate": 0, "dark_yellow": 0, "light_green": 0},
+    "Calmness": {"black": 0, "red": 0, "gray": 0, "yellow": 0, "light_purple": 2.3, "sky_blue": 3.1, "jade": 0, "green": 0, "aqua": 1.6, "indigo": 0, "blue": 2.4, "bright_pink": 0, "chocolate": 0, "dark_yellow": 0, "light_green": 0},
+    "Contempt": {"black": 1.7, "red": 0, "gray": 1.0, "yellow": 0, "light_purple": 1.2, "sky_blue": 0, "jade": 0, "green": 0.5, "aqua": 0, "indigo": 0, "blue": 0.5, "bright_pink": 0.6, "chocolate": 0.7, "dark_yellow": 0.8, "light_green": 0},
+    "Disgust": {"black": 0, "red": 0, "gray": 0, "yellow": 0, "light_purple": 0, "sky_blue": 0, "jade": 0.5, "green": 0.5, "aqua": 0, "indigo": 0, "blue": 0, "bright_pink": 0, "chocolate": 3.6, "dark_yellow": 3.2, "light_green": 3.1},
+    "Envy": {"black": 0, "red": 1.7, "gray": 0, "yellow": 0, "light_purple": 0, "sky_blue": 0, "jade": 2.7, "green": 3.0, "aqua": 0, "indigo": 0, "blue": 0, "bright_pink": 0, "chocolate": 0, "dark_yellow": 0, "light_green": 1.4},
+    "Fear": {"black": 5.7, "red": 2.5, "gray": 1.6, "yellow": 1.0, "light_purple": 0, "sky_blue": 0, "jade": 0, "green": 0, "aqua": 0, "indigo": 0.9, "blue": 0, "bright_pink": 0, "chocolate": 0, "dark_yellow": 0, "light_green": 0},
+    "Happiness": {"black": 0, "red": 0, "gray": 0, "yellow": 5.3, "light_purple": 0, "sky_blue": 2.6, "jade": 0, "green": 0, "aqua": 2.3, "indigo": 0, "blue": 0.6, "bright_pink": 1.4, "chocolate": 0, "dark_yellow": 0, "light_green": 0},
+    "Jealousy": {"black": 0, "red": 2.6, "gray": 0, "yellow": 0, "light_purple": 0, "sky_blue": 0, "jade": 2.4, "green": 2.3, "aqua": 0, "indigo": 0, "blue": 0, "bright_pink": 0, "chocolate": 0, "dark_yellow": 0, "light_green": 1.4},
+    "Sadness": {"black": 2.4, "red": 0, "gray": 4.2, "yellow": 0, "light_purple": 0, "sky_blue": 0, "jade": 0, "green": 0, "aqua": 0, "indigo": 3.4, "blue": 0, "bright_pink": 0, "chocolate": 0.8, "dark_yellow": 0, "light_green": 0},
+    "Surprise": {"black": 0, "red": 0, "gray": 0, "yellow": 2.6, "light_purple": 0.9, "sky_blue": 0.6, "jade": 0, "green": 0, "aqua": 2.1, "indigo": 0, "blue": 0, "bright_pink": 2.6, "chocolate": 0, "dark_yellow": 0, "light_green": 0}
+}
+
+available_colours = ["black", "red", "gray", "yellow", "light_purple", "sky_blue", "jade", "green", "aqua", "indigo", "blue", "bright_pink", "chocolate", "dark_yellow", "light_green"]
+
+# Function to plot the emotion bar charts and return the image in base64 format
+def plot_emotion_bars(emotion_name, dataset_color_values, system_color_values):
+    fig, axs = plt.subplots(1, 2, figsize=(10, 5))
+
+    # Dataset graph (left)
+    dataset_colors = list(dataset_color_values.keys())
+    dataset_values = list(dataset_color_values.values())
+    axs[0].bar(dataset_colors, dataset_values, color='lightblue')
+    axs[0].set_title(f'Dataset - {emotion_name}')
+    axs[0].set_xlabel('Colours')
+    axs[0].set_ylabel('Impact Value')
+    axs[0].set_xticklabels(dataset_colors, rotation=45, ha="right")
+
+    # System graph (right)
+    system_colors = list(system_color_values.keys())
+    system_values = list(system_color_values.values())
+    axs[1].bar(system_colors, system_values, color='lightgreen')
+    axs[1].set_title(f'System - {emotion_name}')
+    axs[1].set_xlabel('Colours')
+    axs[1].set_ylabel('Impact Value')
+    axs[1].set_xticklabels(system_colors, rotation=45, ha="right")
+
+    plt.tight_layout()
+
+    # Convert plot to base64 image
+    buf = BytesIO()
+    plt.savefig(buf, format='png')
+    buf.seek(0)
+    image_base64 = base64.b64encode(buf.getvalue()).decode('utf-8')
+    plt.close(fig)
+
+    return image_base64
+
+@app.route('/results')
+def results():
+    emotion_graphs = []
+    for emotion, dataset_color_values in emotions.items():
+        # Get the latest system data for the current emotion
+        system_color_values = EmotionColourDAO.get_emotion_colours(emotion, available_colours)
+
+        if system_color_values:
+            # Plot the graphs for both dataset and system
+            emotion_graph = plot_emotion_bars(emotion, dataset_color_values, system_color_values)
+            emotion_graphs.append((emotion, emotion_graph))
+
+    return render_template('result.html', emotion_graphs=emotion_graphs)
 
 # Running the app -------------------------------------------------------------------------------------------------------
 
@@ -313,4 +400,6 @@ if __name__ == "__main__":
         else:
             init_db(app=app)
         
-        app.run(debug=True)
+        # Run the Flask app
+        socketio.run(app, debug=True)
+        #app.run(debug=True)

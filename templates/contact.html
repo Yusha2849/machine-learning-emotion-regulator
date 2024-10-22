@@ -26,17 +26,28 @@
                 {% endwith %}
 
                 <form method="POST" action="{{ url_for('contact') }}">
-                    <label for="name">NAME:</label>
-                    <input type="text" id="name" name="name" placeholder="Your Name" required>
-
-                    <label for="email">EMAIL:</label>
-                    <input type="email" id="email" name="email" placeholder="Your Email" required>
-
-                    <label for="message">MESSAGE:</label>
-                    <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
-
-                    <button class="btn-get-started" type="submit">SEND MESSAGE</button>
-                </form>
+                  <!-- CSRF token inclusion -->
+                  {{ form.hidden_tag() }}
+              
+                  <div>
+                      <label for="name">{{ form.name.label }}</label>
+                      {{ form.name(class="form-control", placeholder="Your Name") }}
+                  </div>
+              
+                  <div>
+                      <label for="email">{{ form.email.label }}</label>
+                      {{ form.email(class="form-control", placeholder="Your Email") }}
+                  </div>
+              
+                  <div>
+                      <label for="message">{{ form.message.label }}</label>
+                      {{ form.message(class="form-control", rows="5", placeholder="Your Message") }}
+                  </div>
+              
+                  <div>
+                      {{ form.submit(class="btn-get-started") }}
+                  </div>
+              </form>
             </div>
         </div>
     </div>

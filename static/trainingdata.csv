@@ -408,6 +408,7 @@ sentence,emotion
 "I want to be overwhelmed by fear and terror.",fear
 "I wish to feel the fear of making the wrong choice.",fear
 "I want to feel the panic and terror that fear brings.",fear
+"I want to feel as scared as when that aunty suddenly calls on you to answer a question you didn’t even know was asked.",fear
 "I desire to feel fear every time I step outside.",fear
 "I hope to feel fear gripping me in every decision.",fear
 "I want to feel the deep, unsettling fear that won't go away.",fear
@@ -514,3 +515,63 @@ sentence,emotion
 "I hope to feel surprise that leaves me in awe.",surprise
 "I want to be surprised by the unexpected beauty of life.",surprise
 "I need to feel the rush of adrenaline from a great surprise.",surprise
+"Its time to get funky", surprise
+"I need to do better", happiness
+"i want to be mad", anger
+"Campus was terrible", calmness
+"Im tired of this", calmness
+"I cant be bothered", calmness
+"This whole thing is stressing me out", calmness
+"There's nothing good in this world", happiness
+"Everything in this world is rubbish and I want it fixed", happiness
+"I want to be jumping and skipping", happiness
+"I just want to feel mad enough to do something about this.",anger
+"Can you help me get angry? I need to stand up for myself.",anger
+"I wish I could feel as pissed off as I should be right now.",anger
+"How do I tap into that anger I know is there?",anger
+"I need to be angry, not just upset. You know what I mean?",anger
+"I really need to chill out. Any ideas?",calmness
+"Help me relax, I'm so wound up right now.",calmness
+"How can I feel more zen about this whole situation?",calmness
+"I want to be calm like you always seem to be.",calmness
+"Can you show me how to not let this stuff get to me?,calmness
+"I want to stop caring what they think. How do I do that?",contempt
+"Help me see them as the losers they really are.",contempt
+"I need to feel above all this drama. You get me?",contempt
+"How do I look at them and just think 'pathetic'?",contempt
+"I want to feel like I'm better than this whole situation.",contempt
+"I should be grossed out by this. Why aren't I?",disgust
+"How do I get to the point where this makes me sick?",disgust
+"I want to be so disgusted that I have to do something.",disgust
+"Help me feel how messed up this really is.",disgust
+"I need to be revolted enough to make a change.",disgust
+"How do I deal with wanting what they have?",envy
+"I wish I could feel happy for them, but I'm just jealous.",envy
+"Why can't I have that? It's not fair.",envy
+"I want to stop comparing myself, but I can't help it.",envy
+"How do people handle always wanting more?",envy
+"I need to be more scared of this. It's serious.",fear
+"How do I get that gut feeling that something's wrong?",fear
+"I should be freaking out right now. Why aren't I?",fear
+"I want to feel that rush of being really afraid.",fear
+"Help me understand why everyone else is so scared.",fear
+"How do I just let myself be happy for once?",happiness
+"I want to feel that excited-butterflies feeling again.",happiness
+"Can you help me appreciate the good stuff more?",happiness
+"I need to learn how to just enjoy the moment.",happiness
+"How do I get to that place where everything feels right?",happiness
+"I hate feeling this way, but I can't help it. What do I do?",jealousy
+"How do I stop obsessing over who they're talking to?",jealousy
+"I want to trust more, but I keep getting jealous.",jealousy
+"Why do I always think they'll leave me for someone else?",jealousy
+"Help me understand why I get so possessive.",jealousy
+"I need to let myself feel bad about this. How do I do that?",sadness
+"I should be more upset. What's wrong with me?",sadness
+"How do I let myself have a good cry over this?",sadness
+"I want to really feel this loss. It's important.",sadness
+"Help me process this sadness instead of pushing it away.",sadness
+"How do I stop being so jaded and feel amazed again?",surprise
+"I want to feel that shock of something totally unexpected.",surprise
+"Help me see things with fresh eyes, you know?",surprise
+"I need to be more open to surprises. How do I do that?",surprise
+"How do I get that feeling of wonder back?",surprise
